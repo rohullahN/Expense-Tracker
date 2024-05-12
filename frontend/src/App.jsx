@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import Header from "./components/ui/Header";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import TransactionPage from "./pages/TransactionPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import Header from "./components/ui/Header.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import SignupPage from "./pages/SignupPage.jsx";
+import TransactionPage from "./pages/TransactionPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function App() {
   const authUser = true;
@@ -16,7 +16,7 @@ function App() {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/signup" element={<SignupPage />}></Route>
         <Route path="/transaction" element={<TransactionPage />}></Route>
-        <Route path="" element={<NotFoundPage />}></Route>
+        <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>
   );
