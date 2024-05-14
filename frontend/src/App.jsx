@@ -1,23 +1,42 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/ui/Header.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import TransactionPage from "./pages/TransactionPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import { useQuery } from "@apollo/client";
+import { GET_AUTH_USER } from "./graphql/queries/user.query.js";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-  const authUser = true;
+  const { loading, data, error } = useQuery(GET_AUTH_USER);
+  if (loading) return null;
   return (
     <>
-      {authUser && <Header />}
+      {data?.authUser && <Header />}
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/signup" element={<SignupPage />}></Route>
-        <Route path="/transaction" element={<TransactionPage />}></Route>
-        <Route path="*" element={<NotFoundPage />}></Route>
+        <Route
+          path="/"
+          element={data?.authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={!data?.authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/signup"
+          element={!data?.authUser ? <SignupPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/transaction"
+          element={
+            data?.authUser ? <TransactionPage /> : <Navigate to="/login" />
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <Toaster />
     </>
   );
 }

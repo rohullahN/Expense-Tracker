@@ -1,6 +1,6 @@
 const transactionResolver = {
   Query: {
-    transactions: async (_, _, context) => {
+    transactions: async (_, __, context) => {
       try {
         if (!context.getUser()) throw new Error("Unauthorized");
         const userId = await context.getUser()._id;
@@ -9,7 +9,7 @@ const transactionResolver = {
         return transactions;
       } catch (error) {
         console.error("Error in transactions query: ", error);
-        throw new Error(error.message | "Error getting transactions");
+        throw new Error(error.message || "Error getting transactions");
       }
     },
     transaction: async (_, { transactionId }) => {
@@ -18,7 +18,7 @@ const transactionResolver = {
         return transaction;
       } catch (error) {
         console.error("Error in transaction query: ", error);
-        throw new Error(error.message | "Error getting transaction");
+        throw new Error(error.message || "Error getting transaction");
       }
     },
   },
@@ -33,7 +33,7 @@ const transactionResolver = {
         return newTransaction;
       } catch (error) {
         console.error("Error in creating transaction: ", error);
-        throw new Error(error.message | "Error creating transaction");
+        throw new Error(error.message || "Error creating transaction");
       }
     },
     updateTransaction: async (_, { input }) => {
@@ -46,7 +46,7 @@ const transactionResolver = {
         return updatedTransaction;
       } catch (error) {
         console.error("Error in updating transaction: ", error);
-        throw new Error(error.message | "Error updating transaction");
+        throw new Error(error.message || "Error updating transaction");
       }
     },
     deleteTransaction: async (_, { transactionId }) => {
@@ -57,7 +57,7 @@ const transactionResolver = {
         return deletedTransaction;
       } catch (error) {
         console.error("Error in deleting transaction: ", error);
-        throw new Error(error.message | "Error deleting transaction");
+        throw new Error(error.message || "Error deleting transaction");
       }
     },
   },

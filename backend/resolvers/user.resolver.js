@@ -1,5 +1,6 @@
 import { users } from "../dummyData/data.js";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 const userResolver = {
   Mutation: {
     signUp: async (_, { input }, context) => {
@@ -33,13 +34,16 @@ const userResolver = {
         return newUser;
       } catch (error) {
         console.error("Error in signup: ", error);
-        throw new Error(error.message | "Internal server error");
+        throw new Error(error.message || "Internal server error");
       }
     },
 
     login: async (_, { input }, context) => {
       try {
         const { username, password } = input;
+        if (!username || !password) {
+          throw new Error("All fields are required.");
+        }
         const { user } = await context.authenticate("graphql-local", {
           username,
           password,
@@ -48,16 +52,16 @@ const userResolver = {
         return user;
       } catch (error) {
         console.error("Error in login: ", error);
-        throw new Error(error.message | "Internal server error");
+        throw new Error(error.message || "Internal server error");
       }
     },
-    logout: async (_, _, context) => {
+    logout: async (_, __, context) => {
       try {
         await context.logout();
-        req.session.destroy((err) => {
+        context.req.session.destroy((err) => {
           if (err) throw err;
         });
-        res.clearCoookie("connect.sid");
+        context.res.clearCookie("connect.sid");
         return { message: "Logged out successfully" };
       } catch (error) {
         console.error("Error in logout: ", error);
@@ -66,13 +70,14 @@ const userResolver = {
     },
   },
   Query: {
-    authUser: async (_, _, context) => {
+    authUser: async (_, __, context) => {
       try {
+        console.log("getting user");
         const user = await context.getUser();
         return user;
       } catch (error) {
         console.error("Error in authUser query: ", error);
-        throw new Error(error.message | "Internal server error");
+        throw new Error(error.message || "Internal server error");
       }
     },
     user: async (_, { userId }) => {
@@ -80,7 +85,7 @@ const userResolver = {
         const user = await User.findById(userId);
       } catch (error) {
         console.error("Error in user query: ", error);
-        throw new Error(error.message | "Error getting user");
+        throw new Error(error.message || "Error getting user");
       }
     },
   },
