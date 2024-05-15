@@ -10,7 +10,7 @@ import { GET_AUTH_USER } from "./graphql/queries/user.query.js";
 import { Toaster } from "react-hot-toast";
 
 function App() {
-  const { loading, data, error } = useQuery(GET_AUTH_USER);
+  const { loading, data } = useQuery(GET_AUTH_USER);
   if (loading) return null;
   return (
     <>
@@ -29,7 +29,7 @@ function App() {
           element={!data?.authUser ? <SignupPage /> : <Navigate to="/" />}
         />
         <Route
-          path="/transaction"
+          path="/transaction/:id"
           element={
             data?.authUser ? <TransactionPage /> : <Navigate to="/login" />
           }

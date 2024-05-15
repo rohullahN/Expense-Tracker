@@ -1,3 +1,5 @@
+import Transaction from "../models/transaction.model.js";
+
 const transactionResolver = {
   Query: {
     transactions: async (_, __, context) => {
@@ -5,7 +7,7 @@ const transactionResolver = {
         if (!context.getUser()) throw new Error("Unauthorized");
         const userId = await context.getUser()._id;
 
-        const transactions = await transactionResolver.find({ userId });
+        const transactions = await Transaction.find({ userId });
         return transactions;
       } catch (error) {
         console.error("Error in transactions query: ", error);
