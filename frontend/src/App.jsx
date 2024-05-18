@@ -14,7 +14,7 @@ function App() {
   if (loading) return null;
   return (
     <>
-      {data?.authUser && <Header />}
+      {data?.authUser && <Header userName={data?.authUser.username} />}
       <Routes>
         <Route
           path="/"
