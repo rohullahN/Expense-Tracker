@@ -169,7 +169,7 @@ const TransactionForm = () => {
           />
         </div>
       </div>
-      {/* SUBMIT BUTTON */}
+      {/* SUBMIT BUTTON
       <button
         className="text-white font-bold w-full rounded px-4 py-2 bg-gradient-to-br
           from-green-700 to-green-700 hover:from-green-800 hover:to-green-800
@@ -178,7 +178,7 @@ const TransactionForm = () => {
         disabled={loading}
       >
         {loading ? "Loading..." : "Add Transaction"}
-      </button>
+      </button> */}
     </form>
   );
 };

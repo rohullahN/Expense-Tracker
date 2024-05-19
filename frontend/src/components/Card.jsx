@@ -11,9 +11,9 @@ import { DELETE_TRANSACTION } from "../graphql/mutations/transaction.mutation";
 import toast from "react-hot-toast";
 
 const categoryColorMap = {
-  saving: "from-green-600 to-green-500",
-  expense: "from-red-800 to-red-600",
-  investment: "from-yellow-700 to-yellow-400",
+  saving: "bg-saving",
+  expense: "bg-expense",
+  investment: "bg-investment",
 };
 
 const Card = ({ transaction }) => {
@@ -42,7 +42,7 @@ const Card = ({ transaction }) => {
   };
 
   return (
-    <div className={`rounded-md p-4 bg-gradient-to-br ${cardClass}`}>
+    <div className={`rounded-md p-4 ${cardClass}`}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-lg font-bold text-white">{category}</h2>

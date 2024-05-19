@@ -3,6 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
-    // rest of the code
+    extend: {
+      colors: {
+        saving: "rgba(75, 192, 192)",
+        expense: "rgba(255, 99, 132)",
+        investment: "rgba(54, 162, 235)",
+      },
+    },
   },
 };
