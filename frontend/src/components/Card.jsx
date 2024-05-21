@@ -45,7 +45,7 @@ const Card = ({ transaction }) => {
     <div className={`rounded-md p-4 ${cardClass}`}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
-          <h2 className="text-lg font-bold text-white">{category}</h2>
+          <h2 className="text-lg font-bold text-slate-900">{category}</h2>
           <div className="flex items-center gap-2">
             <FaTrash className={"cursor-pointer"} onClick={handleDelete} />
             <Link to={`/transaction/${transaction._id}`}>
@@ -53,19 +53,19 @@ const Card = ({ transaction }) => {
             </Link>
           </div>
         </div>
-        <p className="text-white flex items-center gap-1">
+        <p className="text-slate-900 flex items-center gap-1">
           <BsCardText />
           Description: {description}
         </p>
-        <p className="text-white flex items-center gap-1">
+        <p className="text-slate-900 flex items-center gap-1">
           <MdOutlinePayments />
           Payment Type: {paymentType}
         </p>
-        <p className="text-white flex items-center gap-1">
+        <p className="text-slate-900 flex items-center gap-1">
           <FaSackDollar />
           Amount: ${amount}
         </p>
-        <p className="text-white flex items-center gap-1">
+        <p className="text-slate-900 flex items-center gap-1">
           <FaLocationDot />
           Location: {location || "N/A"}
         </p>

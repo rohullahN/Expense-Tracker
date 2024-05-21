@@ -17,7 +17,7 @@ const Header = ({ userName }) => {
     }
   };
   return (
-    <div className="flex justify-between items-center h-16 bg-black px-4">
+    <div className="flex justify-between items-center h-16 bg-slate-900 px-4">
       <h1 className="px-2 font-bold text-white text-3xl">Expense Tracker</h1>
       <div className="flex items-center">
         <h2 className="text-white text-xl mr-5">

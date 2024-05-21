@@ -11,7 +11,7 @@ type Transaction{
 }
 
 type Query{
-  transactions: [Transaction!]
+  transactions(orderBy: OrderByInput): [Transaction!]
   transaction(transactionId: ID!): Transaction
 }
 
@@ -19,6 +19,11 @@ type Mutation{
   createTransaction(input: CreateTransactionInput!): Transaction!
   updateTransaction(input: UpdateTransactionInput!): Transaction!
   deleteTransaction(transactionId: ID!): Transaction!
+}
+
+input OrderByInput{
+  field: String!
+  direction: String!
 }
 
 input CreateTransactionInput{

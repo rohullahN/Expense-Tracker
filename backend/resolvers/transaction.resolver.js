@@ -2,12 +2,21 @@ import Transaction from "../models/transaction.model.js";
 
 const transactionResolver = {
   Query: {
-    transactions: async (_, __, context) => {
+    transactions: async (_, { orderBy }, context) => {
       try {
         if (!context.getUser()) throw new Error("Unauthorized");
         const userId = await context.getUser()._id;
 
         const transactions = await Transaction.find({ userId });
+        if (orderBy) {
+          const { field, direction } = orderBy;
+          transactions.sort((a, b) => {
+            if (direction === "desc") {
+              return new Date(b[field]) - new Date(a[field]);
+            }
+            return new Date(a[field]) - new Date(b[field]);
+          });
+        }
         return transactions;
       } catch (error) {
         console.error("Error in transactions query: ", error);
