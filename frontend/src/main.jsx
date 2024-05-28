@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { UpdateTransactionProvider } from "./contexts/UpdateTransactionContext.jsx";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <ApolloProvider client={client}>
-        <App />
+        <UpdateTransactionProvider value={{}}>
+          <App />
+        </UpdateTransactionProvider>
       </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode>

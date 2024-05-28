@@ -4,7 +4,9 @@ import { Doughnut } from "react-chartjs-2";
 import Cards from "../components/Cards.jsx";
 // import TransactionForm from "../components/TransactionForm";
 import TransactionFormModal from "../components/ui/TransactionFormModal.jsx";
-import { useRef } from "react";
+import UpdateTransactionModal from "../components/ui/UpdateTransactionModal.jsx";
+import { useRef, useContext } from "react";
+import { UpdateTransactionContext } from "../contexts/UpdateTransactionContext.jsx";
 
 const chartData = {
   labels: ["Saving", "Expense", "Investment"],
@@ -30,15 +32,19 @@ const chartData = {
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const HomePage = () => {
-  const modal = useRef();
+  const createTransactionModal = useRef();
+  const updateTransactionModal = useRef();
+  const { showModal } = useContext(UpdateTransactionContext);
 
   function handleAddClick(e) {
     e.preventDefault();
-    modal.current.showModal();
+    createTransactionModal.current.showModal();
   }
   return (
     <>
-      <TransactionFormModal ref={modal} />
+      <TransactionFormModal ref={createTransactionModal} />
+      <UpdateTransactionModal ref={updateTransactionModal} />
+
       <div className="flex w-full justify-around max-h-[calc(100vh-4rem)] bg-orange-50">
         {/* <TransactionForm /> */}
         <div className="flex flex-col justify-center items-center gap-5 w-1/3 pt-10">
@@ -59,6 +65,8 @@ const HomePage = () => {
           </p>
           <div className="overflow-y-scroll">
             <Cards />
+            {/* {showModal && (
+            )} */}
           </div>
         </div>
       </div>

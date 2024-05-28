@@ -9,6 +9,8 @@ import { formatDate } from "../utils/formatData";
 import { useMutation } from "@apollo/client";
 import { DELETE_TRANSACTION } from "../graphql/mutations/transaction.mutation";
 import toast from "react-hot-toast";
+import { useContext } from "react";
+import { UpdateTransactionContext } from "../contexts/UpdateTransactionContext";
 
 const categoryColorMap = {
   saving: "bg-saving",
@@ -41,6 +43,11 @@ const Card = ({ transaction }) => {
     }
   };
 
+  const { toggleShowModal } = useContext(UpdateTransactionContext);
+  const handleUpdate = () => {
+    toggleShowModal();
+  };
+
   return (
     <div className={`rounded-md p-4 ${cardClass}`}>
       <div className="flex flex-col gap-3">
@@ -48,9 +55,13 @@ const Card = ({ transaction }) => {
           <h2 className="text-lg font-bold text-slate-900">{category}</h2>
           <div className="flex items-center gap-2">
             <FaTrash className={"cursor-pointer"} onClick={handleDelete} />
-            <Link to={`/transaction/${transaction._id}`}>
-              <HiPencilAlt className="cursor-pointer" size={20} />
-            </Link>
+            {/* <Link to={`/transaction/${transaction._id}`}> */}
+            <HiPencilAlt
+              className="cursor-pointer"
+              size={20}
+              onClick={handleUpdate}
+            />
+            {/* </Link> */}
           </div>
         </div>
         <p className="text-slate-900 flex items-center gap-1">
