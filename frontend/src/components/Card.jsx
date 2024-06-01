@@ -43,19 +43,21 @@ const Card = ({ transaction }) => {
     }
   };
 
-  const { toggleShowModal } = useContext(UpdateTransactionContext);
+  const { toggleShowModal, setTransactionId } = useContext(
+    UpdateTransactionContext
+  );
   const handleUpdate = () => {
+    setTransactionId(transaction._id);
     toggleShowModal();
   };
 
   return (
-    <div className={`rounded-md p-4 ${cardClass}`}>
+    <div className={`rounded-md p-4 ${cardClass} max-w-60`}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">{category}</h2>
           <div className="flex items-center gap-2">
             <FaTrash className={"cursor-pointer"} onClick={handleDelete} />
-            {/* <Link to={`/transaction/${transaction._id}`}> */}
             <HiPencilAlt
               className="cursor-pointer"
               size={20}
@@ -64,10 +66,12 @@ const Card = ({ transaction }) => {
             {/* </Link> */}
           </div>
         </div>
-        <p className="text-slate-900 flex items-center gap-1">
-          <BsCardText />
-          Description: {description}
-        </p>
+        <div className="flex items-center gap-2">
+          <BsCardText className="flex-shrink-0" />
+          <p className="text-slate-900 flex items-center gap-1 overflow-clip">
+            Description: {description}
+          </p>
+        </div>
         <p className="text-slate-900 flex items-center gap-1">
           <MdOutlinePayments />
           Payment Type: {paymentType}
@@ -80,14 +84,7 @@ const Card = ({ transaction }) => {
           <FaLocationDot />
           Location: {location || "N/A"}
         </p>
-        <div className="flex justify-between items-center">
-          <p className="text-xs text-black font-bold">{formattedDate}</p>
-          <img
-            src={"https://tecdn.b-cdn.net/img/new/avatars/2.webp"}
-            className="h-8 w-8 border rounded-full"
-            alt=""
-          />
-        </div>
+        <p className="text-xs text-black font-bold">{formattedDate}</p>
       </div>
     </div>
   );

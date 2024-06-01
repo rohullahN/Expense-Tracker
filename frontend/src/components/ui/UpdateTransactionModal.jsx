@@ -1,19 +1,82 @@
-import { forwardRef, useContext, useEffect } from "react";
+import { forwardRef, useContext, useEffect, useState } from "react";
 import { UpdateTransactionContext } from "../../contexts/UpdateTransactionContext";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_TRANSACTION } from "../../graphql/queries/transaction.query.js";
+import { UPDATE_TRANSATION } from "../../graphql/mutations/transaction.mutation.js";
+import toast from "react-hot-toast";
 const UpdateTransactionModal = forwardRef(function TransactionFormModal(
   _,
   ref
 ) {
-  const { showModal, toggleShowModal } = useContext(UpdateTransactionContext);
+  const { showModal, toggleShowModal, transactionId } = useContext(
+    UpdateTransactionContext
+  );
+
+  const { data } = useQuery(GET_TRANSACTION, {
+    variables: { id: transactionId },
+  });
+
+  const [formData, setFormData] = useState({
+    description: data?.transaction?.description || "",
+    paymentType: data?.transaction?.paymentType || "",
+    category: data?.transaction?.category || "",
+    amount: data?.transaction?.amount || "",
+    location: data?.transaction?.location || "",
+    date: data?.transaction?.date || "",
+  });
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        description: data?.transaction?.description,
+        paymentType: data?.transaction?.paymentType,
+        category: data?.transaction?.category,
+        amount: data?.transaction?.amount,
+        location: data?.transaction?.location,
+        date: new Date(+data.transaction.date).toISOString().substr(0, 10),
+      });
+    }
+  }, [data]);
 
   useEffect(() => {
     showModal ? ref.current.showModal() : ref.current.close();
   }, [ref, showModal]);
 
-  const handleCancelClick = () => {
+  const handleCancelClick = (e) => {
+    e.preventDefault();
     ref.current.close();
     toggleShowModal();
   };
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  }
+
+  const [updateTransaction, { loading }] = useMutation(UPDATE_TRANSATION);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const amount = parseFloat(formData.amount);
+    try {
+      await updateTransaction({
+        variables: { input: { ...formData, amount, transactionId } },
+      });
+      ref.current.close();
+      toast.success("Transaction updated successfully.");
+      toggleShowModal();
+    } catch (error) {
+      console.error("Error when updating transaction: ", error);
+      toast.error(error.message);
+      ref.current.close();
+      toggleShowModal();
+    }
+  }
 
   return (
     <dialog ref={ref} className="bg-orange-50">
@@ -22,7 +85,7 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
       </h1>
       <form
         className=" max-w-lg flex flex-col gap-5 px-3 mx-10 my-10 "
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         method="dialog"
       >
         {/* TRANSACTION */}
@@ -41,6 +104,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
               type="text"
               required
               placeholder="Rent, Groceries, Salary, etc."
+              value={formData.description}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -58,6 +123,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="paymentType"
                 name="paymentType"
+                value={formData.paymentType}
+                onChange={handleChange}
               >
                 <option value={"card"}>Card</option>
                 <option value={"cash"}>Cash</option>
@@ -87,6 +154,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="category"
                 name="category"
+                value={formData.category}
+                onChange={handleChange}
               >
                 <option value={"saving"}>Saving</option>
                 <option value={"expense"}>Expense</option>
@@ -118,6 +187,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
               name="amount"
               type="number"
               placeholder="150"
+              value={formData.amount}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -137,6 +208,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
               name="location"
               type="text"
               placeholder="New York"
+              value={formData.location}
+              onChange={handleChange}
             />
           </div>
 
@@ -155,6 +228,8 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
               className="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-[11px] px-4 mb-3 leading-tight focus:outline-none
 						 focus:bg-white"
               placeholder="Select date"
+              value={formData.date}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -175,9 +250,7 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
 						disabled:opacity-70 disabled:cursor-not-allowed"
             type="submit"
           >
-            {/* {loading ? "Saving..." : "Add Transaction"}
-             */}
-            Update Transaction
+            {loading ? "Saving..." : "Update Transaction"}
           </button>
         </div>
       </form>
