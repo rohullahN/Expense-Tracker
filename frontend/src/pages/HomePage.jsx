@@ -1,40 +1,76 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-
 import Cards from "../components/Cards.jsx";
-// import TransactionForm from "../components/TransactionForm";
 import TransactionFormModal from "../components/ui/TransactionFormModal.jsx";
 import UpdateTransactionModal from "../components/ui/UpdateTransactionModal.jsx";
-import { useRef, useContext } from "react";
-import { UpdateTransactionContext } from "../contexts/UpdateTransactionContext.jsx";
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { GET_TRANSACTION_STATISTICS } from "../graphql/queries/transaction.query.js";
 
-const chartData = {
-  labels: ["Saving", "Expense", "Investment"],
-  datasets: [
-    {
-      label: "%",
-      data: [13, 8, 3],
-      backgroundColor: [
-        "rgba(75, 192, 192)",
-        "rgba(255, 99, 132)",
-        "rgba(54, 162, 235)",
-      ],
-      borderColor: [
-        "rgba(75, 192, 192)",
-        "rgba(255, 99, 132)",
-        "rgba(54, 162, 235, 1)",
-      ],
-      borderWidth: 1,
-      cutout: 0,
-    },
-  ],
-};
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const HomePage = () => {
+  const { data } = useQuery(GET_TRANSACTION_STATISTICS);
+  console.log(data);
+
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "$",
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1,
+        cutout: 0,
+      },
+    ],
+  });
+
+  useEffect(() => {
+    if (data?.categoryStatistics) {
+      const categories = data.categoryStatistics.map((stat) => stat.category);
+      const totalAmounts = data.categoryStatistics.map(
+        (stat) => stat.totalAmount
+      );
+
+      const backgroundColors = [];
+      const borderColors = [];
+
+      categories.forEach((category) => {
+        switch (category) {
+          case "saving":
+            backgroundColors.push("rgba(75, 192, 192)");
+            borderColors.push("rgba(75, 192, 192)");
+            break;
+          case "expense":
+            backgroundColors.push("rgba(255, 99, 132)");
+            borderColors.push("rgba(255, 99, 132)");
+            break;
+          case "investment":
+            backgroundColors.push("rgba(54, 162, 235)");
+            borderColors.push("rgba(54, 162, 235)");
+            break;
+          default:
+            break;
+        }
+      });
+
+      setChartData((prev) => ({
+        labels: categories,
+        datasets: [
+          {
+            ...prev.datasets[0],
+            data: totalAmounts,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+          },
+        ],
+      }));
+    }
+  }, [data]);
   const createTransactionModal = useRef();
   const updateTransactionModal = useRef();
-  const { showModal } = useContext(UpdateTransactionContext);
 
   function handleAddClick(e) {
     e.preventDefault();
@@ -45,7 +81,7 @@ const HomePage = () => {
       <TransactionFormModal ref={createTransactionModal} />
       <UpdateTransactionModal ref={updateTransactionModal} />
 
-      <div className="flex w-full justify-around max-h-[calc(100vh-4rem)] bg-orange-50">
+      <div className="flex w-full justify-around h-[calc(100vh-4rem)] bg-orange-50">
         {/* <TransactionForm /> */}
         <div className="flex flex-col justify-center items-center gap-5 w-1/3 pt-10">
           <Doughnut data={chartData} />

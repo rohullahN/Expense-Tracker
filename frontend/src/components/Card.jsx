@@ -4,14 +4,12 @@ import { MdOutlinePayments } from "react-icons/md";
 import { FaSackDollar } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
 import { HiPencilAlt } from "react-icons/hi";
-import { Link } from "react-router-dom";
 import { formatDate } from "../utils/formatData";
 import { useMutation } from "@apollo/client";
 import { DELETE_TRANSACTION } from "../graphql/mutations/transaction.mutation";
 import toast from "react-hot-toast";
 import { useContext } from "react";
-import { UpdateTransactionContext } from "../contexts/UpdateTransactionContext";
-
+import { UpdateTransactionContext } from "../contexts/UpdateTransactionContext.jsx";
 const categoryColorMap = {
   saving: "bg-saving",
   expense: "bg-expense",
@@ -29,7 +27,7 @@ const Card = ({ transaction }) => {
   const formattedDate = formatDate(date);
 
   const [deleteTransaction] = useMutation(DELETE_TRANSACTION, {
-    refetchQueries: ["GetTransactions"],
+    refetchQueries: ["GetTransactions", "GetTransactionStatistics"],
   });
 
   const handleDelete = async () => {

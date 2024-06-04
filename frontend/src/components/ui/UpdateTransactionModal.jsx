@@ -1,9 +1,9 @@
 import { forwardRef, useContext, useEffect, useState } from "react";
-import { UpdateTransactionContext } from "../../contexts/UpdateTransactionContext";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_TRANSACTION } from "../../graphql/queries/transaction.query.js";
 import { UPDATE_TRANSATION } from "../../graphql/mutations/transaction.mutation.js";
 import toast from "react-hot-toast";
+import { UpdateTransactionContext } from "../../contexts/UpdateTransactionContext.jsx";
 const UpdateTransactionModal = forwardRef(function TransactionFormModal(
   _,
   ref
@@ -59,7 +59,9 @@ const UpdateTransactionModal = forwardRef(function TransactionFormModal(
     });
   }
 
-  const [updateTransaction, { loading }] = useMutation(UPDATE_TRANSATION);
+  const [updateTransaction, { loading }] = useMutation(UPDATE_TRANSATION, {
+    refetchQueries: ["GetTransactions", "GetTransactionStatistics"],
+  });
   async function handleSubmit(e) {
     e.preventDefault();
     const amount = parseFloat(formData.amount);

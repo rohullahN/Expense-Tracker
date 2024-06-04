@@ -89,7 +89,6 @@ const userResolver = {
       }
     },
   },
-  //TODO => ADD USER/TRANSACTION RELATION
 };
 
 export default userResolver;

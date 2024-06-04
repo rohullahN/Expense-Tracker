@@ -5,7 +5,7 @@ import { CREATE_TRANSACTION } from "../../graphql/mutations/transaction.mutation
 
 const TransactionFormModal = forwardRef(function TransactionFormModal(_, ref) {
   const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
-    refetchQueries: ["GetTransactions"],
+    refetchQueries: ["GetTransactions", "GetTransactionStatistics"],
   });
 
   const handleCancelClick = () => {
