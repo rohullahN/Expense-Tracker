@@ -20,12 +20,11 @@ const Header = ({ userName }) => {
     <div className="flex justify-between items-center h-16 bg-slate-900 px-4">
       <h1 className="px-2 font-bold text-white text-3xl">Expense Tracker</h1>
       <div className="flex items-center">
-        <h2 className="text-white text-xl mr-5">
-          Hello <span>{userName}!</span>
-        </h2>
+        <h2 className="text-white text-xl mr-5">Hello {userName}!</h2>
         <MdLogout
           className=" w-7 h-7 cursor-pointer text-white"
           onClick={handleLogout}
+          data-testid="logoutIcon"
         />
       </div>
     </div>
