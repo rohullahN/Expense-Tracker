@@ -14,11 +14,13 @@ import mergedResolvers from "./resolvers/index.js";
 import mergedTypeDefs from "./typeDefs/index.js";
 import { connectDB } from "./db/connectDB.js";
 import { configurePassport } from "./passport/passport.config.js";
+import path from "path";
 
 dotenv.config();
 configurePassport();
 const app = express();
 const httpServer = http.createServer(app);
+const __dirname = path.resolve();
 
 const MongoDBStore = connectMongo(session);
 
@@ -63,6 +65,11 @@ app.use(
     context: async ({ req, res }) => buildContext({ req, res }),
   })
 );
+
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+});
 
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 await connectDB();
